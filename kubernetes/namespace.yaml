@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: much-todo
+  labels:
+    name: much-todo
+    env: development
