@@ -46,6 +46,9 @@ func LoadConfig(path string) (config Config, err error) {
 		}
 	}
 
+	// Bind environment variables to override config file
+	viper.BindEnv("MONGO_URI")
+
 	err = viper.Unmarshal(&config)
 	if err != nil {
 		return
