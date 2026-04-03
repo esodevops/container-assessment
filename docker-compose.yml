@@ -18,6 +18,17 @@ services:
     networks:
       - backend
 
+  frontend:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    container_name: frontend-app
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - backend
+
   mongodb:
     image: mongo:8.0
     container_name: mongodb

@@ -7,14 +7,21 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 NAMESPACE="much-todo"
 CLUSTER_NAME="much-todo-cluster" 
-IMAGE_NAME="backend-app:latest"
+BACKEND_IMAGE="backend-app:latest"
+FRONTEND_IMAGE="frontend-app:latest"
 
 cd "$ROOT_DIR"
 
-echo "--- 📦 1. Building and Loading Image into Kind ---"
-# We build it here to ensure the latest code is used
-docker build -t $IMAGE_NAME -f Dockerfile .
-kind load docker-image $IMAGE_NAME --name $CLUSTER_NAME
+echo "--- 📦 1. Building and Loading Images into Kind ---"
+# Build backend
+docker build -t $BACKEND_IMAGE -f Dockerfile .
+kind load docker-image $BACKEND_IMAGE --name $CLUSTER_NAME
+
+# Build frontend
+cd Client
+docker build -t $FRONTEND_IMAGE .
+cd ..
+kind load docker-image $FRONTEND_IMAGE --name $CLUSTER_NAME
 
 echo "--- 2. Creating Namespace ---"
 kubectl apply -f kubernetes/namespace.yaml
@@ -28,7 +35,10 @@ kubectl wait --for=condition=ready pod -l app=mongodb -n $NAMESPACE --timeout=12
 echo "--- 5. Deploying Backend Resources ---"
 kubectl apply -f kubernetes/backend/
 
-echo "--- 6. Deploying Ingress ---"
+echo "--- 6. Deploying Frontend Resources ---"
+kubectl apply -f kubernetes/frontend/
+
+echo "--- 7. Deploying Ingress ---"
 kubectl apply -f kubernetes/ingress.yaml
 
 echo "--- Deployment Finished ---"
