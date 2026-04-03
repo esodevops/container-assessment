@@ -9,4 +9,11 @@ echo "--- 🔨 Building Backend Docker Image ---"
 # Build the Docker image for the backend
 docker build -t backend-app:latest -f Dockerfile .
 
-echo "--- ✅ Build Complete: backend-app:latest ---"
+echo "--- 🔨 Building Frontend Docker Image ---"
+
+# Build the Docker image for the frontend
+cd Client
+docker build -t frontend-app:latest .
+cd ..
+
+echo "--- ✅ Build Complete: backend-app:latest and frontend-app:latest ---"

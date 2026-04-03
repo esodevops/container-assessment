@@ -4,7 +4,7 @@ metadata:
   name: backend
   namespace: much-todo
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: backend
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: backend-app:v4
+          image: backend-app:latest
           imagePullPolicy: Never
           workingDir: /app
           ports:
