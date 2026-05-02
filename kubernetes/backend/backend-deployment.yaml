@@ -23,6 +23,19 @@ spec:
           envFrom:
             - configMapRef:
                 name: backend-config
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: MONGO_USER
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: MONGO_PASSWORD
+            - name: MONGO_URI
+              value: mongodb://$(MONGO_USER):$(MONGO_PASSWORD)@mongodb-service:27017/?authSource=admin
           resources:
             requests:
               memory: "128Mi"
