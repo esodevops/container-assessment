@@ -57,8 +57,8 @@ A full-stack todo application built with modern web technologies. Features user 
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
-   cd much-to-do
+   git clone https://github.com/esodevops/container-assessment.git
+   cd container-assessment
    ```
 
 2. **Backend dependencies**
