@@ -35,6 +35,7 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.SetDefault("PORT", "8080")
 	viper.SetDefault("ENABLE_CACHE", false)
 	viper.SetDefault("JWT_EXPIRATION_HOURS", 72)
+	viper.SetDefault("DB_NAME", "much_todo_db")
 	viper.SetDefault("COOKIE_DOMAINS", []string{"localhost"})
 	viper.SetDefault("SECURE_COOKIE", false)
 	viper.SetDefault("ALLOWED_ORIGINS", []string{"http://localhost:5173"})
@@ -48,6 +49,7 @@ func LoadConfig(path string) (config Config, err error) {
 
 	// Bind environment variables to override config file
 	viper.BindEnv("MONGO_URI")
+	viper.BindEnv("DB_NAME")
 
 	err = viper.Unmarshal(&config)
 	if err != nil {
