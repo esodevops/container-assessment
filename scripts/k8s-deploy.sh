@@ -12,7 +12,7 @@ FRONTEND_IMAGE="frontend-app:latest"
 
 cd "$ROOT_DIR"
 
-echo "--- 📦 1. Building and Loading Images into Kind ---"
+echo "--- 1. Building and Loading Images into Kind ---"
 # Build backend
 docker build -t $BACKEND_IMAGE -f Dockerfile .
 kind load docker-image $BACKEND_IMAGE --name $CLUSTER_NAME
@@ -30,7 +30,7 @@ echo "--- 3. Deploying MongoDB Resources ---"
 kubectl apply -f kubernetes/mongodb/
 
 echo "--- 4. Waiting for MongoDB to be ready ---"
-kubectl wait --for=condition=ready pod -l app=mongodb -n $NAMESPACE --timeout=120s
+kubectl wait --for=condition=ready pod -l app=mongodb -n $NAMESPACE --timeout=300s
 
 echo "--- 5. Deploying Backend Resources ---"
 kubectl apply -f kubernetes/backend/

@@ -4,7 +4,7 @@ set -e
 # Ensure we are operating from the project root
 cd "$(dirname "$0")/.."
 
-echo "--- 🚀 Starting Local Development Environment ---"
+echo "--- Starting Local Development Environment ---"
 
 # Force a pull of third-party images (Mongo/Redis) and start
 # We use --build to ensure the backend uses the latest local changes
