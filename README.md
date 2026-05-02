@@ -120,26 +120,75 @@ A full-stack todo application built with modern web technologies. Features user 
 
 ## Kubernetes Deployment
 
-1. **Create Kind cluster**
+Use these steps to deploy the full stack (MongoDB, backend, frontend, ingress) on a local kind cluster.
+
+1. **Install ingress-nginx (one-time per cluster)**
 
    ```bash
-   kind create cluster --name much-to-do-cluster --config kind-config.yaml
+   kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+   kubectl wait --namespace ingress-nginx \
+     --for=condition=ready pod \
+     --selector=app.kubernetes.io/component=controller \
+     --timeout=120s
    ```
 
-2. **Deploy application**
+2. **Deploy the application**
 
    ```bash
    ./scripts/k8s-deploy.sh
    ```
 
-3. **Access the application**
-   - Application: http://localhost
-   - API endpoints: http://localhost/api/\*
-   - API Documentation: http://localhost/api/swagger/index.html
+   What this script does:
+   - Ensures the `much-todo-cluster` kind cluster exists
+   - Waits for the control-plane node to be ready
+   - Builds backend and frontend images and loads them into kind
+   - Applies Kubernetes manifests under `kubernetes/`
 
-4. **Check deployment status**
+3. **Verify resources**
+
    ```bash
-   kubectl get all -n much-todo
+   kubectl get pods -n much-todo
+   kubectl get svc -n much-todo
+   kubectl get ingress -n much-todo
+   ```
+
+4. **Access the app (Option A: ingress)**
+
+   ```bash
+   curl http://localhost
+   curl http://localhost/api/health
+   ```
+
+   Open in browser:
+   - Frontend: http://localhost
+   - API health: http://localhost/api/health
+
+5. **Access the app (Option B: port-forward)**
+
+   Run each command in a separate terminal:
+
+   ```bash
+   kubectl port-forward svc/frontend-service 8082:80 -n much-todo
+   kubectl port-forward svc/backend-service 8080:80 -n much-todo
+   ```
+
+   Open in browser:
+   - Frontend: http://localhost:8082
+   - API health: http://localhost:8080/health
+
+6. **Troubleshooting quick checks**
+
+   ```bash
+   kubectl logs deployment/backend -n much-todo --tail=100
+   kubectl logs deployment/frontend -n much-todo --tail=100
+   kubectl logs deployment/mongodb -n much-todo --tail=100
+   ```
+
+7. **Cleanup**
+
+   ```bash
+   ./scripts/k8s-cleanup.sh
+   kind delete cluster --name much-todo-cluster
    ```
 
 ## Testing
@@ -157,4 +206,3 @@ go test ./...
 cd Client
 npm run test
 ```
-
