@@ -8,8 +8,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME:-root}:${MONGO_INITDB_ROOT_PASSWORD:-example}@mongodb:27017/${DB_NAME:-much_todo_db}?authSource=admin&replicaSet=rs0
-      - REDIS_URL=${REDIS_HOST:-redis}:${REDIS_PORT:-6379}
+      - MONGO_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME:-root}:${MONGO_INITDB_ROOT_PASSWORD:-example}@mongodb:27017/${DB_NAME:-much_todo_db}?authSource=admin&replicaSet=rs0
+      - DB_NAME=${DB_NAME:-much_todo_db}
+      - REDIS_ADDR=${REDIS_HOST:-redis}:${REDIS_PORT:-6379}
+      - ALLOWED_ORIGINS=http://0.0.0.0,http://localhost,http://127.0.0.1,http://localhost:5173,http://127.0.0.1:5173
+      - COOKIE_DOMAINS=localhost,127.0.0.1,0.0.0.0
+      - SECURE_COOKIE=false
     depends_on:
       mongodb:
         condition: service_healthy
@@ -37,13 +41,24 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-root}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-example}
       MONGO_INITDB_DATABASE: ${DB_NAME:-much_todo_db}
-    command: ["--replSet", "rs0", "--bind_ip_all"]
+    command:
+      [
+        "--replSet",
+        "rs0",
+        "--bind_ip_all",
+        "--keyFile",
+        "/data/keyfile/mongodb.key",
+      ]
     volumes:
       - mongo_data:/data/db
+      - mongodb_config:/data/configdb
+      - ./mongodb.key:/data/keyfile/mongodb.key:ro
     healthcheck:
       test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongodb:27017'}]}) }" | mongosh --port 27017 -u ${MONGO_INITDB_ROOT_USERNAME:-root} -p ${MONGO_INITDB_ROOT_PASSWORD:-example} --authenticationDatabase admin --quiet
       interval: 10s
+      timeout: 10s
       retries: 5
+      start_period: 40s
     networks:
       - backend
 
@@ -55,6 +70,7 @@ services:
 
 volumes:
   mongo_data:
+  mongodb_config:
 
 networks:
   backend:

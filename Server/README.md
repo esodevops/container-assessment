@@ -44,8 +44,8 @@ This project includes a `Makefile` to simplify common development tasks. You can
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repository-url>
-cd much-to-do/Server/MuchToDo
+git clone https://github.com/esodevops/container-assessment.git
+cd container-assessment/Server/MuchToDo
 ```
 
 ### 2. Configure Environment Variables

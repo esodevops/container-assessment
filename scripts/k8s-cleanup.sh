@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 
 NAMESPACE="much-todo"
 
-echo "--- 🧹 Starting Kubernetes Cleanup for Namespace: $NAMESPACE ---"
+echo "--- Starting Kubernetes Cleanup for Namespace: $NAMESPACE ---"
 
 # Check if the namespace exists before trying to delete it
 if kubectl get namespace "$NAMESPACE" >/dev/null 2>&1; then
@@ -19,11 +19,11 @@ fi
 
 # Optional: Clean up orphaned Persistent Volumes if any exist 
 # (Useful if you've been testing storage and things got messy)
-echo "--- 💾 Checking for orphaned Persistent Volumes... ---"
+echo "--- Checking for orphaned Persistent Volumes... ---"
 kubectl get pv | grep "Released" | awk '{print $1}' | xargs -r kubectl delete pv
 
 # Optional: Clear the local Docker image to save space
-echo "--- 🐳 Removing local backend image... ---"
+echo "--- Removing local backend image... ---"
 docker rmi backend-app:latest --force 2>/dev/null || true
 
-echo "--- ✨ Cleanup Complete! ---"
+echo "--- Cleanup Complete! ---"

@@ -21,8 +21,8 @@ FROM nginx:alpine
 # Copy built app to nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy nginx config if needed (optional)
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Copy nginx config for SPA route fallback
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port
 EXPOSE 80
