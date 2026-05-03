@@ -152,7 +152,19 @@ Use these steps to deploy the full stack (MongoDB, backend, frontend, ingress) o
    kubectl get ingress -n much-todo
    ```
 
-4. **Access the app (Option A: ingress)**
+4. **Connect to MongoDB and run quick checks**
+
+   ```bash
+   kubectl exec -it -n much-todo deploy/mongodb -- mongosh -u root -p
+   # password: example
+   show dbs
+   use much_todo_db
+   db.getCollectionNames()
+   db.todos.find().limit(5)
+   db.users.find().limit(5)
+   ```
+
+5. **Access the app (Option A: ingress)**
 
    ```bash
    curl http://localhost
@@ -163,7 +175,7 @@ Use these steps to deploy the full stack (MongoDB, backend, frontend, ingress) o
    - Frontend: http://localhost
    - API health: http://localhost/api/health
 
-5. **Access the app (Option B: port-forward)**
+6. **Access the app (Option B: port-forward)**
 
    Run each command in a separate terminal:
 
@@ -176,7 +188,7 @@ Use these steps to deploy the full stack (MongoDB, backend, frontend, ingress) o
    - Frontend: http://localhost:8082
    - API health: http://localhost:8080/health
 
-6. **Troubleshooting quick checks**
+7. **Troubleshooting quick checks**
 
    ```bash
    kubectl logs deployment/backend -n much-todo --tail=100
@@ -184,7 +196,7 @@ Use these steps to deploy the full stack (MongoDB, backend, frontend, ingress) o
    kubectl logs deployment/mongodb -n much-todo --tail=100
    ```
 
-7. **Cleanup**
+8. **Cleanup**
 
    ```bash
    ./scripts/k8s-cleanup.sh
