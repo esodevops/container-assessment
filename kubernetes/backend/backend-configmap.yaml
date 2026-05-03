@@ -8,7 +8,7 @@ data:
   MONGO_HOST: "mongodb-service"
   MONGO_URI: "mongodb://mongodb-service:27017"
   REDIS_HOST: "redis-service"
-  ALLOWED_ORIGINS: "http://localhost:8082,http://127.0.0.1:8082,http://localhost,\
-    http://127.0.0.1"
-  COOKIE_DOMAINS: "localhost,127.0.0.1"
+  ALLOWED_ORIGINS: "http://localhost:8082,http://127.0.0.1:8082,http://0.0.0.0:80\
+    82,http://localhost,http://127.0.0.1,http://0.0.0.0"
+  COOKIE_DOMAINS: "localhost,127.0.0.1,0.0.0.0"
   LOG_LEVEL: "info"
